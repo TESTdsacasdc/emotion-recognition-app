@@ -7,9 +7,9 @@ const ctx = canvas.getContext('2d');
 
 // 在页面加载完成后运行初始化函数
 window.onload = async function () {
-    // 加载模型
-    await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
-    await faceapi.nets.faceExpressionNet.loadFromUri('/models');
+    // 加载 face-api.js 模型
+    await faceapi.nets.tinyFaceDetector.loadFromUri('models');
+    await faceapi.nets.faceExpressionNet.loadFromUri('models');
 
     // 获取摄像头权限
     const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
@@ -29,7 +29,7 @@ async function detectEmotions() {
 
     // 循环进行检测
     setInterval(async () => {
-        // 使用 face-api.js 进行人脸检测
+        // 使用 face-api.js 进行人脸检测和情绪识别
         const detections = await faceapi.detectAllFaces(video,
             new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
 
@@ -37,22 +37,12 @@ async function detectEmotions() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         detections.forEach(detection => {
             const emotions = detection.expressions;
-            // 绘制人脸检测框
-            const box = detection.detection.box;
-            const { top, left, width, height } = box;
-            ctx.strokeStyle = 'red';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(left, top, width, height);
-            
+            // 绘制人脸检测框等
+            // ...
+
             // 输出表情结果为 JSON 格式
             const jsonResult = JSON.stringify({
-                faceId: detection.faceDetection.faceToken,
-                faceRectangle: { top, left, width, height },
-                faceAttributes: {
-                    gender: 'unknown', // 你可能需要进行性别识别
-                    age: 0, // 你可能需要进行年龄识别
-                    emotion: emotions
-                }
+                // ...
             });
             console.log(jsonResult);
         });
